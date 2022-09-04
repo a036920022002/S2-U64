@@ -5,8 +5,9 @@ const app = express()
 const exphbs = require('express-handlebars')
 const Todo = require('./models/todo')
 
+//connect mongoose
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-
+//check mongoose connection 
 const db = mongoose.connection
 db.on('error', () => {
   console.log('mongodb error!')
@@ -14,12 +15,13 @@ db.on('error', () => {
 db.once('open', () => {
   console.log('mongodb connected!')
 })
-
+//use handlebars
 app.engine('handlebars', exphbs({ defaultLayout: 'main' }))
 app.set('view engine', 'handlebars')
-
+//use bodyParser
 app.use(bodyParser.urlencoded({ extended: true }))
 
+//index show the todo
 app.get('/', (req, res) => {
   Todo.find()
     .lean().then(todos => res.render('index', { todos }))
